@@ -33,7 +33,7 @@ SET(WEBSITE "http://cxong.github.io/cdogs-sdl/")
 option(DEBUG "Enable debug build" OFF)
 option(DEBUG_PROFILE "Enable debug profile build" OFF)
 option(USE_SHARED_ENET "Use system installed copy of enet" OFF)
-option(BUILD_EDITOR "Build cdogs-sdl-editor" ON)
+option(BUILD_EDITOR "Build cdogs-sdl-editor" OFF)
 
 # check for crosscompiling (defined when using a toolchain file)
 if(CMAKE_CROSSCOMPILING)
@@ -64,8 +64,10 @@ endif()
 
 set(CMAKE_MODULE_PATH
 	${CMAKE_MODULE_PATH}
-	"${CMAKE_SOURCE_DIR}/build/cmake"
+	"${CMAKE_SOURCE_DIR}/cmake"
 	"${CMAKE_SOURCE_DIR}/src/proto/nanopb/extra")
+
+set(SDL2_PATH "/opt/devkitpro/portlibs/switch/include/SDL2")
 	
 find_package(Nanopb REQUIRED)
 find_package(SDL2 REQUIRED)
@@ -74,8 +76,19 @@ find_package(SDL2_mixer REQUIRED)
 if(BUILD_EDITOR)
 	find_package(OpenGL REQUIRED)
 endif()
-find_package(CCache)
+#find_package(CCache)
 link_directories(${SDL2_LIBRARY_DIRS} ${SDL2_IMAGE_LIBRARY_DIRS} ${SDL2_MIXER_LIBRARY_DIRS})
+
+include_directories(${SDL2_INCLUDE_DIR}
+	${SDL2_IMAGE_INCLUDE_DIR}
+	${SDL2_MIXER_INCLUDE_DIR}
+	/opt/devkitpro/libnx/include
+	/opt/devkitpro/portlibs/switch/include
+	/opt/devkitpro/devkitA64/aarch64-none-elf/include)
+
+# target_link_libraries(target ${SDL2_INCLUDE_DIR}
+# ${SDL2_IMAGE_INCLUDE_DIR}
+# ${SDL2_MIXER_INCLUDE_DIR})
 
 if(CCACHE_FOUND AND CLANG)
 	add_definitions(-Qunused-arguments -fcolor-diagnostics)
