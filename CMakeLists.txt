@@ -77,14 +77,20 @@ if(BUILD_EDITOR)
 	find_package(OpenGL REQUIRED)
 endif()
 #find_package(CCache)
-link_directories(${SDL2_LIBRARY_DIRS} ${SDL2_IMAGE_LIBRARY_DIRS} ${SDL2_MIXER_LIBRARY_DIRS})
+link_directories(${SDL2_LIBRARY_DIRS}
+	${SDL2_IMAGE_LIBRARY_DIRS}
+	${SDL2_MIXER_LIBRARY_DIRS}
+	/opt/devkitpro/libnx/lib
+	/opt/devkitpro/portlibs/switch/lib
+	/opt/devkitpro/devkitA64/lib)
 
 include_directories(${SDL2_INCLUDE_DIR}
 	${SDL2_IMAGE_INCLUDE_DIR}
 	${SDL2_MIXER_INCLUDE_DIR}
 	/opt/devkitpro/libnx/include
 	/opt/devkitpro/portlibs/switch/include
-	/opt/devkitpro/devkitA64/aarch64-none-elf/include)
+	/usr/include/sys)
+#/opt/devkitpro/devkitA64/aarch64-none-elf/include
 
 # target_link_libraries(target ${SDL2_INCLUDE_DIR}
 # ${SDL2_IMAGE_INCLUDE_DIR}
@@ -145,7 +151,8 @@ else()
 		endif()
 	endif()
 	if(NOT BEOS AND NOT HAIKU)
-		add_definitions(-Winline -Werror)
+		add_definitions(-Winline)
+		#add_definitions(-Winline -Werror)
 		set(EXTRA_LIBRARIES "m")
 	endif()
 endif()

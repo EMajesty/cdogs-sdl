@@ -60,7 +60,11 @@
 	#define getch _getch
 	#define kbhit _kbhit
 #else
+
+#ifdef teppo666
 	#include <termios.h> // for getch() and kbhit()
+#endif
+
 	#include <unistd.h> // for getch(), kbhit() and (u)sleep()
 	#include <sys/ioctl.h> // for getkey()
 	#include <sys/types.h> // for kbhit()
@@ -70,6 +74,7 @@
 /// Get character without waiting for Return to be pressed.
 /// Windows has this in conio.h
 RLUTIL_INLINE int getch(void) {
+#ifdef teppo666	
 	// Here be magic.
 	struct termios oldt, newt;
 	int ch;
@@ -80,12 +85,15 @@ RLUTIL_INLINE int getch(void) {
 	ch = getchar();
 	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 	return ch;
+#endif
 }
+
 
 /// Function: kbhit
 /// Determines if keyboard has been hit.
 /// Windows has this in conio.h
 RLUTIL_INLINE int kbhit(void) {
+#ifdef teppo666	
 	// Here be dragons.
 	static struct termios oldt, newt;
 	int cnt = 0;
@@ -104,7 +112,9 @@ RLUTIL_INLINE int kbhit(void) {
 	select(STDIN_FILENO+1, NULL, NULL, NULL, &tv); // A small time delay
 	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 	return cnt; // Return number of characters
+#endif
 }
+
 #endif // _WIN32
 
 #ifndef gotoxy
